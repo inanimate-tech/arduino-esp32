@@ -481,6 +481,12 @@ size_t TwoWire::requestFrom(uint16_t address, size_t size, bool sendStop)
         log_e("NULL buffer pointer");
         return 0;
     }
+    if(size > bufferSize){
+        log_e("Requested %zu bytes but the buffer holds only %zu", size, bufferSize);
+        log_e("Set the buffer size with TwoWire::setBufferSize() before begin().");
+        log_e("Set the buffer size with Wire.setBufferSize() before begin().");
+        size = bufferSize;  // limit to the buffer size
+    }
     esp_err_t err = ESP_OK;
     if(nonStop
 #if !CONFIG_DISABLE_HAL_LOCKS
